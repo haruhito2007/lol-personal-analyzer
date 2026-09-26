@@ -4,9 +4,22 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LoL Personal Analzer</title>
+  <link rel="stylesheet" href="{{ url_for('static',filename='css/style.css') }}">
 </head>
 <body>
-    <h1>LoL Personal Analyzer</h1>
-    <p>LoLの戦績を分析するWebアプリ</p>
+  <h1>LoL Personal Analyzer</h1>
+  <p>LoLの戦績を分析するWebアプリ</p>
+
+  <form id="search-form" action="" method="get">
+    <label for="game-name">ゲーム名</label>
+    <input type="text" name="game-name" id="game-name">
+
+    <label for="tag-line">タグライン</label>
+    <input type="text" name="tag-line" id="tag-line">
+
+    <button type="submit">検索</button>
+  </form>
+
+  <script src="{{ url_for('static',filename='js/main.js')}}"></script>
 </body>
 </html>

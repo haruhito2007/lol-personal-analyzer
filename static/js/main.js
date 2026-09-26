@@ -10,4 +10,21 @@ form.addEventListener("submit",function(event) {
 
   console.log(gameName);
   console.log(tagline);
+
+  fetch("/search", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      gameName: gameName,
+      tagline: tagline
+    })
+  })
+  .then(function(response) {
+    return response.json();
+  })
+  .then(function(data) {
+    console.log(data);
+  });
 });

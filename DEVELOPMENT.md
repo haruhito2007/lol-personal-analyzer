@@ -546,7 +546,7 @@ Riot Developer PortalでAPI Keyを再発行し、`.env` を更新した。
 間違っていたコード:
 
 ```python
-requests.get(api_key, headers=api_key)
+requests.get(api_key, headers=headers)
 ```
 
 原因:

@@ -1,5 +1,8 @@
 # Development Log
 
+> **現在の開発状況：** P1は2026-11-12にPR #3で`main`へマージ済みです。ここには開発当時の「次にやること」や実装状況も履歴として残しています。最新の機能と起動手順は [README](../README.md) を確認してください。
+
+
 ## 1. プロジェクト概要
 
 League of Legends の戦績を取得・分析する Web アプリを作成する。
@@ -1151,3 +1154,10 @@ Node.js v24.22.1が既存環境で利用できたため、追加ライブラリ�
 JP1所属アカウントをRiot IDで検索し、Solo/Duo最新1試合のチャンピオン、WIN / LOSE、Kills、Deaths、Assists、KDAをWeb画面へ表示する正常系は、ユーザーの実ブラウザ確認を含めて達成している。P1で必要な主要異常系もモックテストで安全に処理できることを確認した。
 
 したがって、P1の実装とSTEP 5の品質確認は完了と判断できる。コミット、push、Pull Requestは、ユーザーとChatGPTの最終レビュー後に実施する。
+
+### 7.8 2026-11-12 P1 PR #3 マージと資料整理
+
+- P1のSTEP 1〜5を完成し、Python 29件・Node.js UIテスト14件の成功を確認した。
+- [Pull Request #3](https://github.com/haruhito2007/lol-personal-analyzer/pull/3) を `main` へマージした（コミット `ec53b615c5dbd2efc4422b86bcbaf964e4e05ad4`）。
+- READMEをP1完了時点に合わせて更新し、要件・基本設計・DB構想・開発履歴を `docs/` へ整理する。承認済み要件と基本設計の内容は変更しない。
+- 次の開発段階はP2（MySQL基盤と対象試合同期）の設計・実装とする。

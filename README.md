@@ -1,274 +1,114 @@
-# LoL Personal Analyzer
+# サモナーズノート（Summoner's Note）
 
-League of Legends の戦績を取得・分析するWebアプリです。
+League of Legends（LoL）の戦績を取得し、試合の振り返りと改善につなげるための個人向けWebアプリです。
 
-学校で学習している Python / HTML / CSS / JavaScript / DB / Git / Linux などの技術を、実際のアプリ開発を通して活用することを目的に開発しています。
+> **開発状況：P1完成（2026-11-12）／v1.0全体は開発中**  
+> リポジトリ名 `lol-personal-analyzer` はそのまま使用しています。
 
-現在は Riot Games API を利用して、Riot IDからプレイヤー情報と直近試合の情報を取得する機能を実装しています。
+学校で学んでいるPython・Web開発・Git・データベースの知識を実際の制作物に活かす、学習兼ポートフォリオプロジェクトです。
 
-## Features
+## 現在できること（P1）
 
-現在実装済みの機能:
+- Riot ID（ゲーム名・タグライン）からプレイヤーを検索
+- Riot APIの所属情報を確認し、**JP1（日本サーバー）** のアカウントに限定
+- **Solo/Duoランク（queue 420）の最新1試合** を取得
+- チャンピオン名、WIN / LOSE、Kills / Deaths / Assists、KDAを戦績カードに表示
+- 0デス時のKDA補足、試合なし・入力エラー・APIエラーの案内
+- ローディング表示、検索中の二重送信防止、古い検索結果の消去
 
-- Riot IDの入力フォーム
-- JavaScriptからFlaskへのPOST通信
-- Riot ACCOUNT-V1を利用したプレイヤー検索
-- Riot IDからPUUIDを取得
-- MATCH-V5を利用した直近20試合のMatch ID取得
-- 最新試合の詳細データ取得
-- 参加者10人の中からPUUIDを利用して本人を特定
-- 最新試合で使用したChampionの取得
+※ P1は最新**1試合**の表示です。20試合表示、DB保存、改善目標、試合レビューは今後の開発対象です。
 
-今後追加予定:
+## 技術構成
 
-- Kills / Deaths / Assists の取得
-- Win / Lose の取得
-- KDAの計算
-- Webページへの戦績表示
-- 直近複数試合の分析
-- 勝率
-- 平均KDA
-- CS
-- Vision Score
-- Champion別成績
-- MySQLへの試合データ保存
-- SQLを利用した戦績分析
-- UI改善
-- Linuxサーバーへのデプロイ
+| 領域 | 技術 |
+|---|---|
+| バックエンド | Python、Flask（Application Factory / Blueprint） |
+| Riot API通信 | requests、Riot ACCOUNT-V1 / MATCH-V5 |
+| フロントエンド | HTML、CSS、JavaScript（Fetch API） |
+| 設定 | python-dotenv（`.env`） |
+| テスト | Python `unittest`、Node.js標準テスト機能 |
 
-## Tech Stack
+アプリ内部では、Flaskのルーティング・プレイヤー検索Service・Riot API Clientを分離しています。
 
-### Backend
+## セットアップ（Windows / PowerShell）
 
-- Python
-- Flask
+### 1. クローンと仮想環境
 
-### Frontend
-
-- HTML
-- CSS
-- JavaScript
-
-### API
-
-- Riot Games API
-  - ACCOUNT-V1
-  - MATCH-V5
-
-### Python Libraries
-
-- Flask
-- requests
-- python-dotenv
-
-### Development
-
-- Git
-- GitHub
-- VS Code
-- Python Virtual Environment (`.venv`)
-
-### Future
-
-- MySQL
-- Linux
-- Web Server
-
-## Application Flow
-
-現在は以下の流れでデータを取得しています。
-
-```text
-ユーザーがRiot IDを入力
-↓
-HTMLフォーム
-↓
-JavaScriptでgameNameとtagLineを取得
-↓
-fetch()でFlaskの /search にPOST
-↓
-FlaskがJSONを受信
-↓
-Riot ACCOUNT-V1へアクセス
-↓
-PUUID取得
-↓
-MATCH-V5へアクセス
-↓
-直近20試合のMatch ID取得
-↓
-最新Match ID取得
-↓
-最新試合の詳細データ取得
-↓
-participantsから10人分のデータを取得
-↓
-PUUIDを比較して本人を特定
-↓
-使用Championを取得
-```
-
-## Project Structure
-
-```text
-lol-personal-analyzer/
-├── app.py
-├── README.md
-├── DEVELOPMENT.md
-├── requirements.txt
-├── .gitignore
-├── .env
-├── templates/
-│   └── index.html
-└── static/
-    ├── css/
-    │   └── style.css
-    └── js/
-        └── main.js
-```
-
-`.env` と `.venv` はGitHubにはアップロードしません。
-
-## Setup
-
-### 1. Repositoryをclone
-
-```bash
-git clone <repository-url>
+```powershell
+git clone https://github.com/haruhito2007/lol-personal-analyzer.git
 cd lol-personal-analyzer
-```
-
-### 2. Python仮想環境を作成
-
-Windows:
-
-```powershell
 python -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
 ```
 
-仮想環境を有効化:
+### 2. Riot APIキーを設定
 
-```powershell
-.\.venv\Scripts\Activate.ps1
-```
+プロジェクト直下に `.env` を作成し、開発用APIキーを設定します。
 
-PowerShellのExecution Policyによって実行できない場合:
-
-```powershell
-Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
-```
-
-その後、もう一度:
-
-```powershell
-.\.venv\Scripts\Activate.ps1
-```
-
-### 3. 必要なライブラリをインストール
-
-```powershell
-pip install -r requirements.txt
-```
-
-### 4. Riot API Keyを設定
-
-プロジェクト直下に `.env` を作成します。
-
-```env
+```dotenv
 RIOT_API_KEY=YOUR_RIOT_API_KEY
 ```
 
-APIキーはRiot Developer Portalから取得します。
+APIキーは[Riot Developer Portal](https://developer.riotgames.com/)で取得します。`.env` はGit管理対象外です。キーを変更した後はアプリを再起動してください。
 
-APIキーは秘密情報のため、ソースコードへ直接記述せず `.env` で管理しています。
-
-`.gitignore` に `.env` を追加しているため、GitHubにはアップロードされません。
-
-### 5. Flaskを起動
+### 3. 起動
 
 ```powershell
-python app.py
+.\.venv\Scripts\python.exe app.py
 ```
 
-起動後、ブラウザで以下にアクセスします。
+ブラウザで `http://127.0.0.1:5000/` を開きます。`python app.py` ではデバッグモードは既定で無効です。
+
+## テスト
+
+```powershell
+.\.venv\Scripts\python.exe -m unittest discover -s tests -v
+```
+
+P1最終確認時：Pythonテスト **29件成功**、Node.js UI状態テスト **14件成功**（skip 0）。
+
+JavaScriptの実行テストは既存のNode.jsを使用します。Node.jsがない環境ではPythonから呼び出すUIテストがskipされます。テストはモックを使用し、実Riot APIへの通信は行いません。
+
+## ディレクトリ構成
 
 ```text
-http://127.0.0.1:5000
+lol-personal-analyzer/
+├── app.py                     # Flask起動入口
+├── summoners_note/            # 設定、Routes、Services、Riot API Client
+├── templates/                 # HTML
+├── static/                    # CSS / JavaScript
+├── tests/                     # Python / JavaScriptテスト
+├── docs/                      # 仕様・設計・開発記録
+│   ├── REQUIREMENTS.md
+│   ├── BASIC_DESIGN.md
+│   ├── DATABASE.md
+│   └── DEVELOPMENT.md
+├── requirements.txt
+├── .gitignore
+└── README.md
 ```
 
-## Git Workflow
+## ドキュメント
 
-このプロジェクトはGit / GitHubでバージョン管理しています。
+| 文書 | 用途 |
+|---|---|
+| [REQUIREMENTS.md](docs/REQUIREMENTS.md) | v1.0の確定要件・対象範囲・開発優先順位 |
+| [BASIC_DESIGN.md](docs/BASIC_DESIGN.md) | 承認済み基本設計の判断と未決定事項 |
+| [DATABASE.md](docs/DATABASE.md) | DBの初期構想メモ（**未実装・未確定**） |
+| [DEVELOPMENT.md](docs/DEVELOPMENT.md) | 実装履歴・テスト・学習内容・エラーと解決 |
 
-基本的な流れ:
+過去の実装段階を記録した文章には、当時の「次にやること」が残っています。**現在の実装状況はこのREADMEを優先**してください。
 
-```text
-コードを変更
-↓
-git status
-↓
-git add
-↓
-git commit
-↓
-git push
-↓
-GitHubへ反映
-```
+## ロードマップ
 
-2台のPCで開発しているため、別のPCで作業を開始するときは最初に、
+- **P1 完了**：JP1プレイヤー検索とSolo/Duo最新1試合の戦績表示（[PR #3](https://github.com/haruhito2007/lol-personal-analyzer/pull/3)）
+- **P2 次の段階**：MySQL基盤と対象試合の同期
+- **P3以降**：複数試合の履歴・統計、改善目標、試合レビュー、ダッシュボードの拡充
 
-```bash
-git pull
-```
+正式なv1.0の対象範囲と完成条件は [REQUIREMENTS.md](docs/REQUIREMENTS.md) を参照してください。
 
-を実行して最新状態を取得します。
+## 安全上の注意
 
-## Development Status
-
-現在開発中です。
-
-現在は最新試合について、
-
-```text
-Riot ID
-↓
-PUUID
-↓
-Match ID
-↓
-試合詳細
-↓
-本人を特定
-↓
-Champion取得
-```
-
-まで実装しています。
-
-次は、
-
-```text
-Kills
-Deaths
-Assists
-Win / Lose
-↓
-KDA計算
-↓
-FlaskからJSONで返す
-↓
-JavaScriptで受信
-↓
-HTMLへ表示
-```
-
-を実装する予定です。
-
-## Development Log
-
-実装した内容、使用した技術、学んだこと、発生したエラーと解決方法については、
-
-`DEVELOPMENT.md`
-
-に記録しています。
+- `.env`、APIキー、秘密鍵をコミットしないでください。
+- 開発用Riot APIキーには使用条件・期限・レート制限があります。
+- 本アプリは個人学習・開発用です。一般公開に向けた認証・運用は別途設計が必要です。

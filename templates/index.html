@@ -3,23 +3,125 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LoL Personal Analzer</title>
-  <link rel="stylesheet" href="{{ url_for('static',filename='css/style.css') }}">
+  <title>サモナーズノート</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-  <h1>LoL Personal Analyzer</h1>
-  <p>LoLの戦績を分析するWebアプリ</p>
+  <main class="app-shell">
+    <header class="page-header">
+      <p class="eyebrow">Summoner's Note</p>
+      <h1>Solo/Duo 最新戦績</h1>
+      <p class="page-description">
+        日本サーバーのRiot IDから、Solo/Duoランクの最新1試合を確認します。
+      </p>
+    </header>
 
-  <form id="search-form" action="" method="get">
-    <label for="game-name">ゲーム名</label>
-    <input type="text" name="game-name" id="game-name">
+    <section class="search-panel" aria-labelledby="search-title">
+      <h2 id="search-title">プレイヤー検索</h2>
 
-    <label for="tag-line">タグライン</label>
-    <input type="text" name="tag-line" id="tag-line">
+      <form id="search-form" novalidate>
+        <div class="form-grid">
+          <div class="form-field form-field--game-name">
+            <label for="game-name">ゲーム名</label>
+            <input
+              type="text"
+              name="game-name"
+              id="game-name"
+              placeholder="ExamplePlayer"
+              autocomplete="off"
+              required
+            >
+          </div>
 
-    <button type="submit">検索</button>
-  </form>
+          <div class="form-field form-field--tagline">
+            <label for="tag-line">タグライン</label>
+            <div class="tagline-input">
+              <span aria-hidden="true">#</span>
+              <input
+                type="text"
+                name="tag-line"
+                id="tag-line"
+                placeholder="JP1"
+                autocomplete="off"
+                required
+              >
+            </div>
+          </div>
 
-  <script src="{{ url_for('static',filename='js/main.js')}}"></script>
+          <button type="submit" id="search-button">検索</button>
+        </div>
+      </form>
+
+      <p class="scope-note">対応範囲：JP1 / Solo/Duoランク（queue 420）</p>
+    </section>
+
+    <section id="initial-state" class="state-panel" aria-live="polite">
+      <p>ゲーム名とタグラインを入力して検索してください。</p>
+    </section>
+
+    <section
+      id="loading-state"
+      class="state-panel state-panel--loading"
+      role="status"
+      aria-live="polite"
+      hidden
+    >
+      <span class="loading-indicator" aria-hidden="true"></span>
+      <p>最新のSolo/Duo戦績を検索しています…</p>
+    </section>
+
+    <section
+      id="message-state"
+      class="state-panel state-panel--error"
+      role="alert"
+      hidden
+    >
+      <h2>検索できませんでした</h2>
+      <p id="message-text"></p>
+    </section>
+
+    <section id="no-match-state" class="state-panel" aria-live="polite" hidden>
+      <h2 id="no-match-riot-id"></h2>
+      <p>Solo/Duoランクの対象試合がありません。</p>
+    </section>
+
+    <section id="result-section" class="match-card" aria-live="polite" hidden>
+      <div class="match-card__header">
+        <div>
+          <p class="match-card__mode">Solo/Duo 最新1試合</p>
+          <h2 id="result-riot-id"></h2>
+        </div>
+        <span id="result-outcome" class="outcome"></span>
+      </div>
+
+      <div class="champion-row">
+        <span class="stat-label">チャンピオン</span>
+        <strong id="result-champion"></strong>
+      </div>
+
+      <dl class="stats-grid">
+        <div class="stat-item">
+          <dt>Kills</dt>
+          <dd id="result-kills"></dd>
+        </div>
+        <div class="stat-item">
+          <dt>Deaths</dt>
+          <dd id="result-deaths"></dd>
+        </div>
+        <div class="stat-item">
+          <dt>Assists</dt>
+          <dd id="result-assists"></dd>
+        </div>
+        <div class="stat-item stat-item--kda">
+          <dt>KDA</dt>
+          <dd id="result-kda"></dd>
+        </div>
+      </dl>
+
+      <p id="kda-note" class="kda-note" hidden></p>
+    </section>
+  </main>
+
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
 </html>
